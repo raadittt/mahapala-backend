@@ -9,6 +9,7 @@ const BeritaRoute = require("./routes/berita.js");
 const BannerRoute = require("./routes/banner.js");
 const KategoriRoute = require("./routes/kategori.js");
 const DokumentasiRoute = require("./routes/dokumentasi.js");
+const PerpustakaanRoute = require("./routes/perpustakaan.js");
 
 const middleware = require("./middleware/log.js");
 
@@ -21,7 +22,8 @@ app.use("/divisi", DivisiRoute);
 app.use("/berita", BeritaRoute);
 app.use("/banner", BannerRoute);
 app.use("/kategori", KategoriRoute);
-app.use("/kategori", DokumentasiRoute);
+app.use("/dokumentasi", DokumentasiRoute);
+app.use("/perpustakaan", PerpustakaanRoute)
 
 app.listen(PORT, () => {
   console.log(`Server berhasil running pada port ${PORT}`);

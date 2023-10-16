@@ -7,7 +7,7 @@ const getAllDokumentasi = () => {
 };
 
 const createNewDokumentasi = (body) => {
-  const SQLQuery = `INSERT INTO dokumentasi (nama, divisi, kategori, berkas, status, tanggal) VALUES ('${body.nama}', '${body.divisi}','${body.kategori}','${body.berkas}'),'${body.status}','${body.tanggal}'))`;
+  const SQLQuery = `INSERT INTO dokumentasi (nama, divisi, kategori, berkas, status, tanggal) VALUES ('${body.nama}', '${body.divisi}','${body.kategori}','${body.berkas}','${body.status}','${body.tanggal}')`;
 
   return dbPool.execute(SQLQuery);
 };
