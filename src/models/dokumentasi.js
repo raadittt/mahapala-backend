@@ -6,6 +6,11 @@ const getAllDokumentasi = () => {
   return dbPool.execute(SQLQuery);
 };
 
+const getDokumentasiById = (id) => {
+  const SQLQuery = `SELECT * FROM dokumentasi WHERE id_dokumentasi='${id}'`;
+  return dbPool.execute(SQLQuery);
+};
+
 const createNewDokumentasi = (body) => {
   const SQLQuery = `INSERT INTO dokumentasi (nama, divisi, kategori, berkas, status, tanggal) VALUES ('${body.nama}', '${body.divisi}','${body.kategori}','${body.berkas}','${body.status}','${body.tanggal}')`;
 
@@ -29,4 +34,5 @@ module.exports = {
   createNewDokumentasi,
   updateDokumentasi,
   deleteDokumentasi,
+  getDokumentasiById,
 };

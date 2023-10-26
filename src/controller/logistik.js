@@ -16,6 +16,28 @@ const getAllLogistik = async (req, res) => {
   }
 };
 
+const getLogistikById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const [data] = await LogistikModel.getLogistikById(id);
+    if (data.length === 0) {
+      return res.status(404).json({
+        message: "Logistik not found",
+        data: null,
+      });
+    }
+    res.json({
+      message: "GET Logistik data by ID success",
+      data: data,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Server Error",
+      serverMessage: error,
+    });
+  }
+};
+
 const createNewLogistik = async (req, res) => {
   const { body } = req;
   try {
@@ -67,4 +89,4 @@ const deleteLogistik = async (req, res) => {
     });
   }
 };
-module.exports = { getAllLogistik, createNewLogistik, updateLogistik, deleteLogistik };
+module.exports = { getAllLogistik, createNewLogistik, updateLogistik, deleteLogistik, getLogistikById };

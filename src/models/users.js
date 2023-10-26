@@ -6,6 +6,11 @@ const getAllUsers = () => {
   return dbPool.execute(SQLQuery);
 };
 
+const getUserById = (id) => {
+  const SQLQuery = `SELECT * FROM users WHERE id_user='${id}'`;
+  return dbPool.execute(SQLQuery);
+};
+
 const createNewUser = (body) => {
   const SQLQuery = `INSERT INTO users (npm, nama, tanggal_lahir, telepon, alamat, status, level) VALUES ('${body.npm}', '${body.nama}', '${body.tanggal_lahir}',' ${body.telepon}', '${body.alamat}', '${body.status}', '${body.level}')`;
 
@@ -29,4 +34,5 @@ module.exports = {
   createNewUser,
   updateUser,
   deleteUser,
+  getUserById,
 };

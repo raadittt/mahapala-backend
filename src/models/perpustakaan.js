@@ -6,6 +6,11 @@ const getAllPerpustakaan = () => {
   return dbPool.execute(SQLQuery);
 };
 
+const getPerpustakaanById = (id) => {
+  const SQLQuery = `SELECT * FROM perpustakaan WHERE id_perpustakaan='${id}'`;
+  return dbPool.execute(SQLQuery);
+};
+
 const createNewPerpustakaan = (body) => {
   const SQLQuery = `INSERT INTO perpustakaan (nama, divisi, kategori, berkas) VALUES ('${body.nama}', '${body.divisi}','${body.kategori}','${body.berkas}')`;
 
@@ -29,4 +34,5 @@ module.exports = {
   createNewPerpustakaan,
   updatePerpustakaan,
   deletePerpustakaan,
+  getPerpustakaanById,
 };

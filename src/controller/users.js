@@ -16,6 +16,28 @@ const getAllUsers = async (req, res) => {
   }
 };
 
+const getUserById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const [data] = await UsersModel.getUserById(id);
+    if (data.length === 0) {
+      return res.status(404).json({
+        message: "User not found",
+        data: null,
+      });
+    }
+    res.json({
+      message: "GET user data by ID success",
+      data: data,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Server Error",
+      serverMessage: error,
+    });
+  }
+};
+
 const createNewUser = async (req, res) => {
   const { body } = req;
   try {
@@ -67,4 +89,4 @@ const deleteUser = async (req, res) => {
     });
   }
 };
-module.exports = { getAllUsers, createNewUser, updateUser, deleteUser };
+module.exports = { getAllUsers, createNewUser, updateUser, deleteUser, getUserById };

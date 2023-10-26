@@ -16,6 +16,28 @@ const getAllPerpustakaan = async (req, res) => {
   }
 };
 
+const getPerpustakaanById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const [data] = await PerpustakaanModel.getPerpustakaanById(id);
+    if (data.length === 0) {
+      return res.status(404).json({
+        message: "Perpustakaan not found",
+        data: null,
+      });
+    }
+    res.json({
+      message: "GET Perpustakaan data by ID success",
+      data: data,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Server Error",
+      serverMessage: error,
+    });
+  }
+};
+
 const createNewPerpustakaan = async (req, res) => {
   const { body } = req;
   try {
@@ -67,4 +89,4 @@ const deletePerpustakaan = async (req, res) => {
     });
   }
 };
-module.exports = { getAllPerpustakaan, createNewPerpustakaan, updatePerpustakaan, deletePerpustakaan };
+module.exports = { getAllPerpustakaan, createNewPerpustakaan, updatePerpustakaan, deletePerpustakaan, getPerpustakaanById };

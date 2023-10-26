@@ -6,6 +6,11 @@ const getAllLogistik = () => {
   return dbPool.execute(SQLQuery);
 };
 
+const getLogistikById = (id) => {
+  const SQLQuery = `SELECT * FROM logistik WHERE id_logistik='${id}'`;
+  return dbPool.execute(SQLQuery);
+};
+
 const createNewLogistik = (body) => {
   const SQLQuery = `INSERT INTO logistik (nama, qty, kondisi) VALUES ('${body.nama}', '${body.qty}','${body.kondisi}')`;
 
@@ -29,4 +34,5 @@ module.exports = {
   createNewLogistik,
   updateLogistik,
   deleteLogistik,
+  getLogistikById
 };
