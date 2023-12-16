@@ -6,16 +6,21 @@ const getAllBanner = () => {
   return dbPool.execute(SQLQuery);
 };
 
-const createNewBanner = (body) => {
-  const SQLQuery = `INSERT INTO banner (title, gambar) VALUES ('${body.title}','${body.gambar}')`;
-
+const getBannerById = (id) => {
+  const SQLQuery = `SELECT * FROM banner WHERE id_banner='${id}'`;
   return dbPool.execute(SQLQuery);
 };
 
-const updateBanner = (body, id) => {
-  const SQLQuery = `UPDATE banner SET title='${body.title}', gambar='${body.gambar}' WHERE id_banner='${id}'`;
+const createNewBanner = (body) => {
+  const SQLQuery = `INSERT INTO banner (title, gambar) VALUES (?, ?)`;
+  const values = [body.title, body.gambar];
+  return dbPool.execute(SQLQuery, values);
+};
 
-  return dbPool.execute(SQLQuery);
+const updateBanner = (body, id) => {
+  const SQLQuery = `UPDATE banner SET title='${body.title}', gambar=? WHERE id_banner='${id}'`;
+
+  return dbPool.execute(SQLQuery, [body.gambar]);
 };
 
 const deleteBanner = (id) => {
@@ -26,6 +31,7 @@ const deleteBanner = (id) => {
 
 module.exports = {
   getAllBanner,
+  getBannerById,
   createNewBanner,
   updateBanner,
   deleteBanner,

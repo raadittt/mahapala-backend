@@ -1,4 +1,5 @@
 const dbPool = require("../config/db");
+const fs = require('fs');
 
 const getAllDokumentasi = () => {
   const SQLQuery = "SELECT * FROM dokumentasi;";
@@ -12,9 +13,9 @@ const getDokumentasiById = (id) => {
 };
 
 const createNewDokumentasi = (body) => {
-  const SQLQuery = `INSERT INTO dokumentasi (nama, divisi, kategori, berkas, status, tanggal) VALUES ('${body.nama}', '${body.divisi}','${body.kategori}','${body.berkas}','${body.status}','${body.tanggal}')`;
-
-  return dbPool.execute(SQLQuery);
+  const SQLQuery = `INSERT INTO dokumentasi (nama, divisi, kategori, berkas, status, tanggal) VALUES (?, ?, ?, ?, ?, ?)` 
+  const values = [body.nama, body.divisi, body.kategori, body.berkas, body.status, body.tanggal];
+  return dbPool.execute(SQLQuery, values);
 };
 
 const updateDokumentasi = (body, id) => {
