@@ -7,7 +7,7 @@ const getUserLoginById = async (req, res) => {
         const [data] = await LoginModel.getUserLoginById(body);
         if (data.length === 0) {
             return res.status(404).json({
-                message: "User not found",
+                message: "Username atau Pasword salah!",
                 data: null,
             });
         } else {
