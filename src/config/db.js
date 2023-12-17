@@ -7,4 +7,13 @@ const dbPool = mysql.createPool({
   database: process.env.DB_NAME,
 });
 
+dbPool.getConnection(function (error, connection) {
+  if(error) {
+    throw error;
+  } else {
+    console.log("Database Terhubung...");
+    // connection.release();
+  }
+});
+
 module.exports = dbPool.promise();
