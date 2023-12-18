@@ -1,6 +1,8 @@
 require("dotenv").config();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 4000;
 const express = require("express");
+const cors = require('cors');
+const corsOptions = require('./config/cors.js');
 const app = express();
 const session = require("express-session");
 const bodyParser = require('body-parser');
@@ -18,6 +20,7 @@ const middleware = require("./middleware/log.js");
 
 app.use(middleware);
 app.use(express.json());
+app.use(cors(corsOptions));
 
 app.use(bodyParser.urlencoded({ extended: true }));
 // Gunakan body-parser untuk menangani payload JSON
