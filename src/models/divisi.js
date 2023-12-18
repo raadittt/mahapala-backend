@@ -1,7 +1,7 @@
 const dbPool = require("../config/db");
 
 const getAllDivisi = () => {
-  const SQLQuery = "SELECT * FROM divisi;";
+  const SQLQuery = "SELECT * FROM divisi ORDER BY id_divisi DESC";
 
   return dbPool.execute(SQLQuery);
 };

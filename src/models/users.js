@@ -1,7 +1,7 @@
 const dbPool = require("../config/db");
 
 const getAllUsers = () => {
-  const SQLQuery = "SELECT * FROM users;";
+  const SQLQuery = "SELECT * FROM users ORDER BY id_user DESC ";
 
   return dbPool.execute(SQLQuery);
 };
