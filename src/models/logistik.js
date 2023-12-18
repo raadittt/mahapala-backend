@@ -1,7 +1,7 @@
 const dbPool = require("../config/db");
 
 const getAllLogistik = () => {
-  const SQLQuery = "SELECT * FROM logistik;";
+  const SQLQuery = "SELECT * FROM logistik ORDER BY id_logistik DESC";
 
   return dbPool.execute(SQLQuery);
 };

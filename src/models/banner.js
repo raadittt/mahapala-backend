@@ -1,7 +1,7 @@
 const dbPool = require("../config/db");
 
 const getAllBanner = () => {
-  const SQLQuery = "SELECT * FROM banner;";
+  const SQLQuery = "SELECT * FROM banner ORDER BY id_banner DESC";
 
   return dbPool.execute(SQLQuery);
 };
