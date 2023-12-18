@@ -1,19 +1,19 @@
 const LoginModel = require("../models/loginModel");
 
-const getUserLoginById = async (req, res) => {
+const getUserLoginByNPM = async (req, res) => {
     const { body } = req;
 
     try {
-        const [data] = await LoginModel.getUserLoginById(body);
+        const [data] = await LoginModel.getUserLoginByNPM(body);
         if (data.length === 0) {
             return res.status(404).json({
-                message: "Username atau Pasword salah!",
+                message: "NPM atau Tanggal Lahir salah!",
                 data: null,
             });
         } else {
             // Simpan informasi pengguna ke dalam sesi
             req.session.userId = data[0].id;
-            req.session.username = data.username;
+            req.session.npm = data.npm;
 
             return res.status(200).json({
                 message: "Login Berhasil",
@@ -29,4 +29,4 @@ const getUserLoginById = async (req, res) => {
 
 };
 
-module.exports = { getUserLoginById };
+module.exports = { getUserLoginByNPM };
