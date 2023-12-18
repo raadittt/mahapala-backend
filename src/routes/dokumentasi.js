@@ -2,6 +2,8 @@ const express = require("express");
 const multer = require("multer");
 const router = express.Router();
 const DokumentasiController = require("../controller/dokumentasi.js");
+const cors = require('cors');
+const corsOptions = require('../config/cors.js');
 
 // Define storage for uploaded files
 const storage = multer.diskStorage({
@@ -16,10 +18,10 @@ const storage = multer.diskStorage({
 // Create a Multer instance with the specified storage options
 const upload = multer({ storage: storage });
 
-router.get("/", DokumentasiController.getAllDokumentasi);
-router.get("/:id", DokumentasiController.getDokumentasiById);
-router.post("/", upload.single("berkas"), DokumentasiController.createNewDokumentasi);
-router.patch("/:id", upload.single("berkas"), DokumentasiController.updateDokumentasi);
-router.delete("/:id", DokumentasiController.deleteDokumentasi);
+router.get("/", cors(corsOptions), DokumentasiController.getAllDokumentasi);
+router.get("/:id", cors(corsOptions), DokumentasiController.getDokumentasiById);
+router.post("/", cors(corsOptions), upload.single("berkas"), DokumentasiController.createNewDokumentasi);
+router.patch("/:id", cors(corsOptions), upload.single("berkas"), DokumentasiController.updateDokumentasi);
+router.delete("/:id", cors(corsOptions), DokumentasiController.deleteDokumentasi);
 
 module.exports = router;
