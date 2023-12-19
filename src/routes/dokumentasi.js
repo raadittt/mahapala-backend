@@ -20,8 +20,8 @@ const upload = multer({ storage: storage });
 
 router.get("/", cors(corsOptions), DokumentasiController.getAllDokumentasi);
 router.get("/:id", cors(corsOptions), DokumentasiController.getDokumentasiById);
-router.post("/", cors(corsOptions), DokumentasiController.createNewDokumentasi);
-router.patch("/:id", cors(corsOptions), DokumentasiController.updateDokumentasi);
+router.post("/", cors(corsOptions), upload.single("berkas"), DokumentasiController.createNewDokumentasi);
+router.patch("/:id", cors(corsOptions), upload.single("berkas"), DokumentasiController.updateDokumentasi);
 router.delete("/:id", cors(corsOptions), DokumentasiController.deleteDokumentasi);
 
 module.exports = router;
