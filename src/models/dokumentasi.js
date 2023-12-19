@@ -13,9 +13,9 @@ const getDokumentasiById = (id) => {
 };
 
 const createNewDokumentasi = (body) => {
-  const SQLQuery = `INSERT INTO dokumentasi (nama, divisi, kategori, berkas, status, tanggal) VALUES (?, ?, ?, ?, ?, ?)` 
-  const values = [body.nama, body.divisi, body.kategori, body.berkas, body.status, body.tanggal];
-  return dbPool.execute(SQLQuery, values);
+  const SQLQuery = `INSERT INTO dokumentasi (nama, divisi, kategori, berkas, status, tanggal) VALUES ('${body.nama}', '${body.divisi}','${body.kategori}','${body.berkas}'),'${body.status}','${body.tanggal}'))`;
+
+  return dbPool.execute(SQLQuery);
 };
 
 const updateDokumentasi = (body, id) => {
