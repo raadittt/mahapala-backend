@@ -53,7 +53,7 @@ const createNewBerita = async (req, res) => {
   try {
     if (req.file) {
       const result = await cloudinary.uploader.upload(req.file.path);
-      body.berkas = result.secure_url; // Simpan URL aman ke dalam database
+      body.gambar = result.secure_url; // Simpan URL aman ke dalam database
     }
 
     await BeritaModel.createNewBerita(body);
@@ -61,7 +61,7 @@ const createNewBerita = async (req, res) => {
       message: "CREATE new data Berita success",
       data: {
         ...body,
-        berkas: req.file ? req.file.filename : null,
+        gambar: req.file ? req.file.filename : null,
       },
     });
   } catch (error) {
@@ -79,15 +79,15 @@ const updateBerita = async (req, res) => {
   try {
     if (req.file) {
       const result = await cloudinary.uploader.upload(req.file.path);
-      body.berkas = result.secure_url; // Simpan URL aman ke dalam database
+      body.gambar = result.secure_url; // Simpan URL aman ke dalam database
     }
 
     const [data] = await BeritaModel.getBeritaById(id);
-    const berkas_lama = data[0].berkas;
+    const gambar_lama = data[0].gambar;
 
-    if (berkas_lama) {
-      // Hapus berkas lama di Cloudinary
-      await cloudinary.uploader.destroy(berkas_lama, { invalidate: true });
+    if (gambar_lama) {
+      // Hapus gambar lama di Cloudinary
+      await cloudinary.uploader.destroy(gambar_lama, { invalidate: true });
     }
 
     await BeritaModel.updateBerita(body, id);
@@ -96,7 +96,7 @@ const updateBerita = async (req, res) => {
       data: {
         id: id,
         ...body,
-        berkas: req.file ? req.file.filename : null,
+        gambar: req.file ? req.file.filename : null,
       },
     });
   } catch (error) {
@@ -111,11 +111,11 @@ const deleteBerita = async (req, res) => {
   const { id } = req.params;
   try {
     const [data] = await BeritaModel.getBeritaById(id);
-    const berkas_lama = data[0].berkas;
+    const gambar_lama = data[0].gambar;
 
     // Hapus file di Cloudinary
-    if (berkas_lama) {
-      const result = await cloudinary.uploader.destroy(berkas_lama, { invalidate: true });
+    if (gambar_lama) {
+      const result = await cloudinary.uploader.destroy(gambar_lama, { invalidate: true });
       console.log(result); // Log hasil penghapusan file dari Cloudinary
     }
 
