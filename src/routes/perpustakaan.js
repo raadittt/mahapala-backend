@@ -1,24 +1,33 @@
 const express = require("express");
 const multer = require("multer");
-const router = express.Router();
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const PerpustakaanController = require("../controller/perpustakaan.js");
+const cloudinary = require('cloudinary').v2;
 const cors = require('cors');
 const corsOptions = require('../config/cors.js');
 
-// Define storage for uploaded files
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "uploads/"); // Specify the directory to save the uploaded files
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + "-" + file.originalname); // Use a unique filename
+// Configure Cloudinary
+cloudinary.config({
+  cloud_name: 'dvkzpnpgj',
+  api_key: '261859215443568',
+  api_secret: 'Jvbuo2YRzDNmPY7FMailqTNzlc4',
+});
+
+// Configure Cloudinary as storage engine for Multer
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'uploads', // Specify the folder in Cloudinary where you want to store the files
+    allowed_formats: ['jpg', 'jpeg', 'png', 'gif', 'pdf'], // Specify the allowed file formats
+    public_id: (req, file) => `perpustakaan_${Date.now()}_${file.originalname}`, // Generate a unique public_id for each file
   },
 });
 
-// Create a Multer instance with the specified storage options
+// Create a Multer instance with the Cloudinary storage engine
 const upload = multer({ storage: storage });
 
-// Define routes using the upload middleware
+const router = express.Router();
+
 router.get("/", cors(corsOptions), PerpustakaanController.getAllPerpustakaan);
 router.get("/:id", cors(corsOptions), PerpustakaanController.getPerpustakaanById);
 router.post("/", cors(corsOptions), upload.single("berkas"), PerpustakaanController.createNewPerpustakaan);
