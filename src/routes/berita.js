@@ -30,8 +30,8 @@ const router = express.Router();
 
 router.get("/", cors(corsOptions), BeritaController.getAllBerita);
 router.get("/:id", cors(corsOptions), BeritaController.getBeritaById);
-router.post("/", cors(corsOptions), upload.single("berkas"), BeritaController.createNewBerita);
-router.patch("/:id", cors(corsOptions), upload.single("berkas"), BeritaController.updateBerita);
+router.post("/", cors(corsOptions), upload.single("gambar"), BeritaController.createNewBerita);
+router.patch("/:id", cors(corsOptions), upload.single("gambar"), BeritaController.updateBerita);
 router.delete("/:id", cors(corsOptions), BeritaController.deleteBerita);
 
 module.exports = router;
