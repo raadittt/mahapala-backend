@@ -1,5 +1,13 @@
 const BeritaModel = require("../models/berita");
 const fs = require("fs");
+const cloudinary = require('cloudinary').v2;
+
+// Configure Cloudinary
+cloudinary.config({
+  cloud_name: 'dvkzpnpgj',
+  api_key: '261859215443568',
+  api_secret: 'Jvbuo2YRzDNmPY7FMailqTNzlc4',
+});
 
 const getAllBerita = async (req, res) => {
   try {
@@ -43,16 +51,17 @@ const createNewBerita = async (req, res) => {
   console.log(req.file);
   const { body } = req;
   try {
-    await BeritaModel.createNewBerita({
-      ...body,
-      gambar: req.file.filename,
-    });
+    if (req.file) {
+      const result = await cloudinary.uploader.upload(req.file.path);
+      body.berkas = result.secure_url; // Simpan URL aman ke dalam database
+    }
 
+    await BeritaModel.createNewBerita(body);
     res.json({
       message: "CREATE new data Berita success",
       data: {
         ...body,
-        file: req.file.filename,
+        berkas: req.file ? req.file.filename : null,
       },
     });
   } catch (error) {
@@ -66,30 +75,31 @@ const createNewBerita = async (req, res) => {
 const updateBerita = async (req, res) => {
   const { id } = req.params;
   const { body } = req;
-  console.log(id);
+  console.log(req.file);
   try {
-    const [data] = await BeritaModel.getBeritaById(id);
-    const gambar_lama = data[0].gambar;
-    const path = "uploads/" + gambar_lama;
-    fs.unlink(path, (err) => {
-      if (err) {
-        console.error(`Error deleting file: ${err.message}`);
-        return;
-      }
+    if (req.file) {
+      const result = await cloudinary.uploader.upload(req.file.path);
+      body.berkas = result.secure_url; // Simpan URL aman ke dalam database
+    }
 
-      console.log("File deleted successfully.");
-    });
-    await BeritaModel.updateBerita({ ...body, gambar: req.file.filename }, id);
+    const [data] = await BeritaModel.getBeritaById(id);
+    const berkas_lama = data[0].berkas;
+
+    if (berkas_lama) {
+      // Hapus berkas lama di Cloudinary
+      await cloudinary.uploader.destroy(berkas_lama, { invalidate: true });
+    }
+
+    await BeritaModel.updateBerita(body, id);
     res.json({
       message: "UPDATE data Berita success",
       data: {
         id: id,
         ...body,
-        gambar: req.file.filename,
+        berkas: req.file ? req.file.filename : null,
       },
     });
   } catch (error) {
-    console.log(error);
     res.status(500).json({
       message: "Server Error",
       serverMessage: error,
@@ -101,16 +111,17 @@ const deleteBerita = async (req, res) => {
   const { id } = req.params;
   try {
     const [data] = await BeritaModel.getBeritaById(id);
-    const gambar_lama = data[0].gambar;
-    const path = "uploads/" + gambar_lama;
-    fs.unlink(path, (err) => {
-      if (err) {
-        console.error(`Error deleting file: ${err.message}`);
-        return;
-      }
-      console.log("File deleted successfully.");
-    });
+    const berkas_lama = data[0].berkas;
+
+    // Hapus file di Cloudinary
+    if (berkas_lama) {
+      const result = await cloudinary.uploader.destroy(berkas_lama, { invalidate: true });
+      console.log(result); // Log hasil penghapusan file dari Cloudinary
+    }
+
+    // Hapus data dari database
     await BeritaModel.deleteBerita(id);
+
     res.json({
       message: "DELETE Berita success",
       data: null,
