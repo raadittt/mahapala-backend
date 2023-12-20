@@ -1,5 +1,13 @@
 const DokumentasiModel = require("../models/dokumentasi");
 const fs = require("fs");
+const cloudinary = require('cloudinary').v2;
+
+// Configure Cloudinary
+cloudinary.config({
+  cloud_name: 'dvkzpnpgj',
+  api_key: '261859215443568',
+  api_secret: 'Jvbuo2YRzDNmPY7FMailqTNzlc4',
+});
 
 const getAllDokumentasi = async (req, res) => {
   try {
@@ -43,15 +51,17 @@ const createNewDokumentasi = async (req, res) => {
   console.log(req.file);
   const { body } = req;
   try {
-    await DokumentasiModel.createNewDokumentasi({
-      ...body,
-      berkas: req.file.filename,
-    });
+    if (req.file) {
+      const result = await cloudinary.uploader.upload(req.file.path);
+      body.berkas = result.secure_url; // Simpan URL aman ke dalam database
+    }
+
+    await DokumentasiModel.createNewDokumentasi(body);
     res.json({
       message: "CREATE new data Dokumentasi success",
       data: {
         ...body,
-        file: req.file.filename,
+        berkas: req.file ? req.file.filename : null,
       },
     });
   } catch (error) {
@@ -67,24 +77,26 @@ const updateDokumentasi = async (req, res) => {
   const { body } = req;
   console.log(req.file);
   try {
+    if (req.file) {
+      const result = await cloudinary.uploader.upload(req.file.path);
+      body.berkas = result.secure_url; // Simpan URL aman ke dalam database
+    }
+
     const [data] = await DokumentasiModel.getDokumentasiById(id);
     const berkas_lama = data[0].berkas;
-    const path = "uploads/" + berkas_lama;
-    fs.unlink(path, (err) => {
-      if (err) {
-        console.error(`Error deleting file: ${err.message}`);
-        return;
-      }
 
-      console.log("File deleted successfully.");
-    });
-    await DokumentasiModel.updateDokumentasi({ ...body, berkas: req.file.filename }, id);
+    if (berkas_lama) {
+      // Hapus berkas lama di Cloudinary
+      await cloudinary.uploader.destroy(berkas_lama, { invalidate: true });
+    }
+
+    await DokumentasiModel.updateDokumentasi(body, id);
     res.json({
       message: "UPDATE data Dokumentasi success",
       data: {
         id: id,
         ...body,
-        berkas: req.file.filename,
+        berkas: req.file ? req.file.filename : null,
       },
     });
   } catch (error) {
@@ -100,17 +112,16 @@ const deleteDokumentasi = async (req, res) => {
   try {
     const [data] = await DokumentasiModel.getDokumentasiById(id);
     const berkas_lama = data[0].berkas;
-    const path = "uploads/" + berkas_lama;
-    fs.unlink(path, (err) => {
-      if (err) {
-        console.error(`Error deleting file: ${err.message}`);
-        return;
-      }
 
-      console.log("File deleted successfully.");
-    });
+    // Hapus file di Cloudinary
+    if (berkas_lama) {
+      const result = await cloudinary.uploader.destroy(berkas_lama, { invalidate: true });
+      console.log(result); // Log hasil penghapusan file dari Cloudinary
+    }
 
+    // Hapus data dari database
     await DokumentasiModel.deleteDokumentasi(id);
+
     res.json({
       message: "DELETE Dokumentasi success",
       data: null,
